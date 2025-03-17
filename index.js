@@ -2,10 +2,11 @@
 
 import { apiKey } from "./api-key.js";
 import { setWeatherCache, getWeatherCache } from "./storage-manager.js";
+import { WeatherData } from "./weather-object.js";
 
 getWeather();
 
-async function getWeather(unitIsCelcius = true, locationQuery = "london") {
+function getWeather(unitIsCelcius = true, locationQuery = "london") {
   // TODO: check if cache is more than an hour old
   // and grab new data if it is.
   // Also check if the location matches the requested location.
@@ -16,8 +17,13 @@ async function getWeather(unitIsCelcius = true, locationQuery = "london") {
     return cachedWeather;
   }
 
-  getWeatherFromVisualCrossing().then((weatherJson) =>
-    setWeatherCache(weatherJson)
+  getWeatherFromVisualCrossing(unitIsCelcius, locationQuery).then(
+    (weatherObject) => {
+      if (weatherObject) {
+        setWeatherCache(weatherObject);
+        console.log(weatherObject);
+      }
+    }
   );
 }
 
@@ -42,5 +48,6 @@ async function getWeatherFromVisualCrossing(unitIsCelcius, locationQuery) {
   const weatherJson = await weatherResponse.json().catch((error) => {
     console.error("Error when parsing JSON: " + error);
   });
-  console.log(weatherJson);
+
+  return new WeatherData(weatherJson, unitIsCelcius, locationQuery);
 }
