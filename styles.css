@@ -1,3 +1,21 @@
 body {
   background-color: teal;
 }
+
+#location,
+#current-temp {
+  margin: 1rem;
+}
+
+.upcoming-days {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.day {
+  width: 100px;
+  height: 100px;
+  border: solid grey 2px;
+  background-color: white;
+  border-radius: 5px;
+}
