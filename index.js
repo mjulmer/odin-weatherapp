@@ -5,7 +5,7 @@ import { setWeatherCache, getWeatherCache } from "./storage-manager.js";
 
 getWeather();
 
-async function getWeather() {
+async function getWeather(unitIsCelcius = true, locationQuery = "london") {
   // TODO: check if cache is more than an hour old
   // and grab new data if it is.
   // Also check if the location matches the requested location.
@@ -21,11 +21,16 @@ async function getWeather() {
   );
 }
 
-async function getWeatherFromVisualCrossing() {
+async function getWeatherFromVisualCrossing(unitIsCelcius, locationQuery) {
   let weatherResponse;
+  const unitGroup = unitIsCelcius ? "metric" : "us";
   try {
     weatherResponse = await fetch(
-      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/london?unitGroup=us&key=" +
+      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" +
+        locationQuery +
+        "?unitGroup=" +
+        unitGroup +
+        "&key=" +
         apiKey +
         "&contentType=json"
     );
