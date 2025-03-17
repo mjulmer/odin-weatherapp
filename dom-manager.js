@@ -38,9 +38,10 @@ class DomManager {
   }
 
   registerSearchButton(onClick) {
+    const searchElement = document.querySelector("#search");
     document
       .querySelector("#search-button")
-      .addEventListener("click", () => onClick());
+      .addEventListener("click", (event) => onClick(event, searchElement));
   }
 
   registerRefreshButton(onClick) {

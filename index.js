@@ -29,6 +29,22 @@ domManager.registerSwitchUnitButton(() => {
   setWeatherCache(cachedWeather);
   domManager.updateWeather(cachedWeather);
 });
+domManager.registerSearchButton((event, searchElement) => {
+  event.preventDefault();
+  const locationQuery = searchElement.value;
+  if (locationQuery === "") {
+    return;
+  }
+  let unitIsCelcius = true;
+  const cachedWeather = getWeatherCache();
+  // Cache is empty, there's no unit preference to switch from.
+  if (cachedWeather !== null && cachedWeather !== undefined) {
+    unitIsCelcius = cachedWeather.unitIsCelcius;
+  }
+  getAndCacheWeatherFromVisualCrossing(unitIsCelcius, locationQuery).then(
+    (newWeather) => domManager.updateWeather(newWeather)
+  );
+});
 
 async function getWeather(unitIsCelcius = true, locationQuery = "london") {
   // TODO: check if cache is more than an hour old
