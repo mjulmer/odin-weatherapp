@@ -2,6 +2,10 @@ body {
   background-color: teal;
 }
 
+.header-buttons {
+  margin-top: 1rem;
+}
+
 #location,
 #current-temp {
   margin: 1rem;

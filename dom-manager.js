@@ -27,4 +27,22 @@ class DomManager {
       dayContainer.appendChild(dayDiv);
     });
   }
+
+  registerSearchButton(onClick) {
+    document
+      .querySelector("#search-button")
+      .addEventListener("click", () => onClick());
+  }
+
+  registerRefreshButton(onClick) {
+    document
+      .querySelector(".refresh")
+      .addEventListener("click", () => onClick());
+  }
+
+  registerSwitchUnitButton(onClick) {
+    document
+      .querySelector(".switch-unit")
+      .addEventListener("click", () => onClick());
+  }
 }

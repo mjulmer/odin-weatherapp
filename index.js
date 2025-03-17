@@ -7,6 +7,17 @@ import { DomManager } from "./dom-manager.js";
 
 const domManager = new DomManager();
 getWeather().then((weather) => domManager.updateWeather(weather));
+domManager.registerRefreshButton(() => {
+  const cachedWeather = getWeatherCache();
+  // Cache is empty, there's nothing to refresh
+  if (cachedWeather === null || cachedWeather === undefined) {
+    return;
+  }
+  getWeatherFromVisualCrossing(
+    cachedWeather.unitIsCelcius,
+    cachedWeather.originalLocationQuery
+  ).then((newWeather) => domManager.updateWeather(newWeather));
+});
 
 async function getWeather(unitIsCelcius = true, locationQuery = "london") {
   // TODO: check if cache is more than an hour old
@@ -19,17 +30,13 @@ async function getWeather(unitIsCelcius = true, locationQuery = "london") {
     return cachedWeather;
   }
 
-  getWeatherFromVisualCrossing(unitIsCelcius, locationQuery).then(
-    (weatherObject) => {
-      if (weatherObject) {
-        setWeatherCache(weatherObject);
-        console.log(weatherObject);
-      }
-    }
-  );
+  return getAndCacheWeatherFromVisualCrossing(unitIsCelcius, locationQuery);
 }
 
-async function getWeatherFromVisualCrossing(unitIsCelcius, locationQuery) {
+async function getAndCacheWeatherFromVisualCrossing(
+  unitIsCelcius,
+  locationQuery
+) {
   let weatherResponse;
   const unitGroup = unitIsCelcius ? "metric" : "us";
   try {
@@ -51,5 +58,11 @@ async function getWeatherFromVisualCrossing(unitIsCelcius, locationQuery) {
     console.error("Error when parsing JSON: " + error);
   });
 
-  return new WeatherData(weatherJson, unitIsCelcius, locationQuery);
+  const weatherObject = new WeatherData(
+    weatherJson,
+    unitIsCelcius,
+    locationQuery
+  );
+  setWeatherCache(weatherObject);
+  return weatherObject;
 }
