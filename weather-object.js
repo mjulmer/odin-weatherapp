@@ -29,7 +29,6 @@ class WeatherData {
 // that aren't instances of WeatherData but have identical
 // fields... i.e. ones read from local storage. This is a hack.
 function switchUnit(weatherObject) {
-  console.log("converting temps");
   const converter = weatherObject.unitIsCelcius
     ? changeToFahrenheit
     : changeToCelcius;

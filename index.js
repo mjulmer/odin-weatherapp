@@ -19,7 +19,6 @@ domManager.registerRefreshButton(() => {
   ).then((newWeather) => domManager.updateWeather(newWeather));
 });
 domManager.registerSwitchUnitButton(() => {
-  console.log("switch unit clicked");
   const cachedWeather = getWeatherCache();
   // Cache is empty, there's no unit preference to switch from.
   if (cachedWeather === null || cachedWeather === undefined) {
@@ -49,11 +48,8 @@ domManager.registerSearchButton((event, searchElement) => {
 async function getWeather(unitIsCelcius = true, locationQuery = "london") {
   // TODO: check if cache is more than an hour old
   // and grab new data if it is.
-  // Also check if the location matches the requested location.
   const cachedWeather = getWeatherCache();
   if (cachedWeather !== null && cachedWeather !== undefined) {
-    console.log("Read weather from cache.");
-    console.log(cachedWeather);
     return cachedWeather;
   }
 
