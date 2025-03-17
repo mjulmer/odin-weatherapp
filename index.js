@@ -2,7 +2,7 @@
 
 import { apiKey } from "./api-key.js";
 import { setWeatherCache, getWeatherCache } from "./storage-manager.js";
-import { WeatherData } from "./weather-object.js";
+import { WeatherData, switchUnit } from "./weather-object.js";
 import { DomManager } from "./dom-manager.js";
 
 const domManager = new DomManager();
@@ -13,10 +13,21 @@ domManager.registerRefreshButton(() => {
   if (cachedWeather === null || cachedWeather === undefined) {
     return;
   }
-  getWeatherFromVisualCrossing(
+  getAndCacheWeatherFromVisualCrossing(
     cachedWeather.unitIsCelcius,
     cachedWeather.originalLocationQuery
   ).then((newWeather) => domManager.updateWeather(newWeather));
+});
+domManager.registerSwitchUnitButton(() => {
+  console.log("switch unit clicked");
+  const cachedWeather = getWeatherCache();
+  // Cache is empty, there's no unit preference to switch from.
+  if (cachedWeather === null || cachedWeather === undefined) {
+    return;
+  }
+  switchUnit(cachedWeather);
+  setWeatherCache(cachedWeather);
+  domManager.updateWeather(cachedWeather);
 });
 
 async function getWeather(unitIsCelcius = true, locationQuery = "london") {

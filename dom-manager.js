@@ -2,13 +2,20 @@ export { DomManager };
 
 class DomManager {
   updateWeather(weatherData) {
+    function roundTwoPlaces(num) {
+      return Math.round(num * 100) / 100;
+    }
+
     document.querySelector("#location").textContent = weatherData.location;
     const unit = weatherData.unitIsCelcius ? "C" : "F";
     document.querySelector(
       "#current-temp"
-    ).textContent = `Currently ${weatherData.currTemp}° ${unit}. ${weatherData.currConditions}.`;
+    ).textContent = `Currently ${roundTwoPlaces(
+      weatherData.currTemp
+    )}° ${unit}. ${weatherData.currConditions}.`;
 
     const dayContainer = document.querySelector(".upcoming-days");
+    dayContainer.replaceChildren();
     weatherData.days.forEach((day) => {
       const dayDiv = document.createElement("div");
       dayDiv.className = "day";
@@ -17,7 +24,9 @@ class DomManager {
       dayDiv.appendChild(date);
 
       const tempRange = document.createElement("div");
-      tempRange.textContent = `${day.tempMin}° - ${day.tempMax}°`;
+      tempRange.textContent = `${roundTwoPlaces(
+        day.tempMin
+      )}° - ${roundTwoPlaces(day.tempMax)}°`;
       dayDiv.appendChild(tempRange);
 
       const conditions = document.createElement("div");

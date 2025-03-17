@@ -1,6 +1,6 @@
 "use strict";
 
-export { WeatherData };
+export { WeatherData, switchUnit };
 
 class WeatherData {
   unitIsCelcius;
@@ -23,8 +23,31 @@ class WeatherData {
       this.days.push(new DayWeather(jsonObject.days[i]));
     }
   }
+}
 
-  switchUnit(unitIsCelcius) {}
+// Taking the object allows this to be called on objects
+// that aren't instances of WeatherData but have identical
+// fields... i.e. ones read from local storage. This is a hack.
+function switchUnit(weatherObject) {
+  console.log("converting temps");
+  const converter = weatherObject.unitIsCelcius
+    ? changeToFahrenheit
+    : changeToCelcius;
+  weatherObject.currTemp = converter(weatherObject.currTemp);
+  weatherObject.days.forEach((day) => {
+    console.log(day);
+    day.tempMin = converter(day.tempMin);
+    day.tempMax = converter(day.tempMax);
+  });
+  weatherObject.unitIsCelcius = !weatherObject.unitIsCelcius;
+}
+
+function changeToCelcius(tempInF) {
+  return (tempInF - 32) * (5 / 9);
+}
+
+function changeToFahrenheit(tempInC) {
+  return (tempInC * 9) / 5 + 32;
 }
 
 class DayWeather {
