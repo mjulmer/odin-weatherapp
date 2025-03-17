@@ -3,9 +3,10 @@
 import { apiKey } from "./api-key.js";
 import { setWeatherCache, getWeatherCache } from "./storage-manager.js";
 import { WeatherData } from "./weather-object.js";
-import { updateWeather } from "./dom-manager.js";
+import { DomManager } from "./dom-manager.js";
 
-getWeather().then((weather) => updateWeather(weather));
+const domManager = new DomManager();
+getWeather().then((weather) => domManager.updateWeather(weather));
 
 async function getWeather(unitIsCelcius = true, locationQuery = "london") {
   // TODO: check if cache is more than an hour old

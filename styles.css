@@ -19,3 +19,7 @@ body {
   background-color: white;
   border-radius: 5px;
 }
+
+.day div {
+  margin-bottom: 0.5rem;
+}
